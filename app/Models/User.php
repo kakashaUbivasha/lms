@@ -42,4 +42,20 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    public function courses()
+    {
+        return $this->hasMany(Course::class, 'teacher_id');
+    }
+    public function progress()
+    {
+    return $this->hasMany(Progress::class, 'user_id');
+    }
+    public function student_courses(){
+        return $this->belongsToMany(Course::class, 'course_user', 'user_id', 'course_id')->withTimestamps();
+    }
+    public function quizzes(){
+        return $this->belongsToMany(Quiz::class, 'quiz_user', 'user_id', 'quiz_id')
+            ->withPivot('score', 'completed_at')->withTimestamps();
+    }
 }
