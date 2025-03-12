@@ -2,6 +2,8 @@
 
 namespace App\Http;
 
+use App\Http\Middleware\CheckCourseOwnership;
+use App\Http\Middleware\StudentCourseMiddleware;
 use App\Http\Middleware\TeacherMiddleware;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
@@ -65,6 +67,8 @@ class Kernel extends HttpKernel
         'signed' => \App\Http\Middleware\ValidateSignature::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
-        'role'=>TeacherMiddleware::class
+        'role'=>TeacherMiddleware::class,
+        'course.access'=>StudentCourseMiddleware::class,
+        'course.owner'=>CheckCourseOwnership::class
     ];
 }

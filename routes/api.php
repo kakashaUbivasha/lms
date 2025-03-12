@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CourseController;
+use App\Http\Controllers\LessonController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -27,7 +28,14 @@ Route::group(['middleware'=>['auth:sanctum', 'role:teacher']], function (){
     Route::put('/courses/{course}', [CourseController::class, 'update']);
     Route::delete('/courses/{course}', [CourseController::class, 'destroy']);
 });
-
+Route::group(['middleware'=>['auth:sanctum', 'course.owner']], function (){
+    Route::post('/courses/{course}/lessons', [LessonController::class, 'store']);
+    Route::put('/courses/{course}/lessons/{lesson}', [LessonController::class, 'update']);
+});
+Route::group(['middleware'=>['auth:sanctum', 'course.access']], function (){
+   Route::get('/courses/{course}/lessons', [\App\Http\Controllers\LessonController::class, 'index']);
+   Route::get('/courses/{course}/lessons/{lesson}', [\App\Http\Controllers\LessonController::class, 'show']);
+});
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 Route::get('/courses', [CourseController::class, 'index']);

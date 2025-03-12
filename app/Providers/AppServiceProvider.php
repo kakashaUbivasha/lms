@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Services\AuthService;
+use App\Services\LessonService;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -14,6 +15,9 @@ class AppServiceProvider extends ServiceProvider
     {
         $this->app->singleton(AuthService::class, function ($app) {
             return new AuthService();
+        });
+        $this->app->singleton(LessonService::class, function ($app){
+            return new LessonService();
         });
     }
 

@@ -60,7 +60,10 @@ class User extends Authenticatable
             ->withPivot('score', 'completed_at')->withTimestamps();
     }
 
-
+    public function isAdmin()
+    {
+        return $this->role === 'admin';
+    }
 
 
 
