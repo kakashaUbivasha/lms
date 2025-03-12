@@ -31,6 +31,7 @@ Route::group(['middleware'=>['auth:sanctum', 'role:teacher']], function (){
 Route::group(['middleware'=>['auth:sanctum', 'course.owner']], function (){
     Route::post('/courses/{course}/lessons', [LessonController::class, 'store']);
     Route::put('/courses/{course}/lessons/{lesson}', [LessonController::class, 'update']);
+    Route::delete('/courses/{course}/lessons/{lesson}', [LessonController::class, 'destroy']);
 });
 Route::group(['middleware'=>['auth:sanctum', 'course.access']], function (){
    Route::get('/courses/{course}/lessons', [\App\Http\Controllers\LessonController::class, 'index']);

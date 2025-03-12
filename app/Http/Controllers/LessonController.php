@@ -49,4 +49,10 @@ class LessonController extends Controller
             return response()->json(['error'=>$e->getMessage()], $e->getCode());
         }
     }
+    public function destroy($course_id, $lesson_id){
+        $course = Course::findOrFail($course_id);
+        $lesson = Lesson::findOrFail($lesson_id);
+        $lesson->delete();
+        return response()->json('Успешно удаленно', 204);
+    }
 }

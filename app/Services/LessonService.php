@@ -24,9 +24,11 @@ class LessonService
     }
 
     public function updateLesson($data, $course, $lesson){
-        $lessonOrder = Lesson::where('course_id', $course->id)->where('order', $data['order'])->exists();
-        if($lessonOrder){
-            throw new  \Exception('Курс с таким порядком уже есть', 409);
+        if(isset($data['order'])){
+            $lessonOrder = Lesson::where('course_id', $course->id)->where('order', $data['order'])->first();
+            if($lessonOrder->id !== $lesson->id){
+                throw new  \Exception('Курс с таким порядком уже есть', 409);
+            }
         }
         $lesson->update($data);
         return $lesson;
