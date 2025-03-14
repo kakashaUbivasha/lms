@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\LessonController;
+use App\Http\Controllers\ProgressController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -22,6 +23,10 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 Route::group(['middleware'=>'auth:sanctum'], function (){
    Route::post('/logout', [AuthController::class, 'logout']);
+   Route::post('/courses/enroll', [CourseController::class, 'enroll']);
+   Route::delete('/courses/unlink', [CourseController::class, 'unlink']);
+   Route::post('/progress/{lesson}', [ProgressController::class, 'update']);
+   Route::get('/progress/{course}', [ProgressController::class, 'show']);
 });
 Route::group(['middleware'=>['auth:sanctum', 'role:teacher']], function (){
     Route::post('/courses', [CourseController::class, 'store']);

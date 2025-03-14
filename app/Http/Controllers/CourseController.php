@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CheckCourseRequest;
 use App\Http\Requests\CourseRequest;
 use App\Http\Resources\CourseResource;
 use App\Models\Course;
@@ -44,7 +45,28 @@ class CourseController extends Controller
         $course = Course::findOrFail($id);
         $course->delete();
         return response()->json(['message'=>'Удалено успешно'], 204);
-
+    }
+    public function enroll(CheckCourseRequest $request)
+    {
+        $request->validated();
+        $course = Course::findOrFail($request->course_id);
+        $user = auth()->user();
+        if($course->students()->where('user_id', $user->id)->exists()){
+            return response()->json(['message' => 'Вы уже записаны на этот курс'], 409);
+        }
+        $course->students()->attach($user->id);
+        return response()->json(['message' => 'Вы успешно записались на курс']);
+    }
+    public function unlink(CheckCourseRequest $request)
+    {
+        $request->validated();
+        $course = Course::findOrFail($request->course_id);
+        $user = auth()->user();
+        if(!$course->students()->where('user_id', $user->id)->exists()){
+            return response()->json(['message' => 'Вы не записаны на этот курс'], 409);
+        }
+        $course->students()->detach($user->id);
+        return response()->json(['message' => 'Вы успешно отписались от курса']);
     }
 
     private function courseExistsForTeacher($teacherId, $title)
