@@ -27,6 +27,7 @@ Route::group(['middleware'=>'auth:sanctum'], function (){
    Route::delete('/courses/unlink', [CourseController::class, 'unlink']);
    Route::post('/progress/{lesson}', [ProgressController::class, 'update']);
    Route::get('/progress/{course}', [ProgressController::class, 'show']);
+   Route::get('/courses/{id}/progress', [CourseController::class, 'courseProgress']);
 });
 Route::group(['middleware'=>['auth:sanctum', 'role:teacher']], function (){
     Route::post('/courses', [CourseController::class, 'store']);

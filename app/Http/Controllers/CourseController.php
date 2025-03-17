@@ -6,6 +6,7 @@ use App\Http\Requests\CheckCourseRequest;
 use App\Http\Requests\CourseRequest;
 use App\Http\Resources\CourseResource;
 use App\Models\Course;
+use App\Services\CourseService;
 use Illuminate\Http\Request;
 
 class CourseController extends Controller
@@ -67,6 +68,16 @@ class CourseController extends Controller
         }
         $course->students()->detach($user->id);
         return response()->json(['message' => 'Вы успешно отписались от курса']);
+    }
+
+    public function courseProgress($id, CourseService $courseService){
+            $user = auth()->user();
+        try {
+            $data = $courseService->courseProgress($id, $user);
+            return response()->json(['data' => $data]);
+        }catch (\Exception $exception){
+            return response()->json(['message' => $exception->getMessage()], 400);
+        }
     }
 
     private function courseExistsForTeacher($teacherId, $title)

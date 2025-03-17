@@ -13,6 +13,7 @@ class AuthService
         if(!Hash::check($data['password'], $user->password)) {
             throw new \Exception('Неверные данные', 400);
         }
+        $user->tokens()->delete();
         $token = $user->createToken('my-app-token')->plainTextToken;
         $user->tokens()->where('token', hash('sha256', explode('|', $token)[1]))
             ->update(['expires_at' => now()->addDays(10)]);
