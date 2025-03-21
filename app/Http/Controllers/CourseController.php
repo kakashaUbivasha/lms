@@ -8,11 +8,14 @@ use App\Http\Resources\CourseResource;
 use App\Models\Course;
 use App\Services\CourseService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 class CourseController extends Controller
 {
     public function index(){
-        $courses = Course::all();
+        $courses = Cache::remember('courses_list', 3600, function () {
+            return Course::all();
+        });
         return CourseResource::collection($courses);
     }
     public function show($id){
@@ -51,6 +54,9 @@ class CourseController extends Controller
     {
         $request->validated();
         $course = Course::findOrFail($request->course_id);
+        if(!$course->students()->count() <= 30){
+            return response(['message' => 'Вы уже записаны на этот курс'], 409);
+        }
         $user = auth()->user();
         if($course->students()->where('user_id', $user->id)->exists()){
             return response()->json(['message' => 'Вы уже записаны на этот курс'], 409);

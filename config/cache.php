@@ -78,6 +78,7 @@ return [
             'driver' => 'redis',
             'connection' => 'cache',
             'lock_connection' => 'default',
+            'prefix' => env('REDIS_PREFIX', 'back3_'),
         ],
 
         'dynamodb' => [
